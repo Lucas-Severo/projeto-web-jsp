@@ -1,12 +1,16 @@
-package projetoweb;
+package br.com.projetoweb;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import br.com.projetoweb.model.Cliente;
 
 @WebServlet(urlPatterns = { "/cliente", "/clienteServlet", "/clienteController" })
 public class ClienteServlet extends HttpServlet {
@@ -15,8 +19,11 @@ public class ClienteServlet extends HttpServlet {
 	 * 
 	 */
 	private static final long serialVersionUID = 7371218363017857325L;
-
+	
+	List<Cliente> clientes;
+	
 	public ClienteServlet() {
+		clientes = new ArrayList<Cliente>();
 		System.out.println("Construindo o servlet...");
 	}
 	
@@ -34,14 +41,22 @@ public class ClienteServlet extends HttpServlet {
 	
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		resp.setCharacterEncoding("UTF-8");
-		resp.getWriter().print("Chamou pelo método get");
-		System.out.println("Chamou pelo método get");
+		var dispatcher = req.getRequestDispatcher("/cliente.jsp");
+		
+		req.setAttribute("clientes", clientes);
+		
+		dispatcher.forward(req, resp);
 	}
 
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		String email = req.getParameter("email");
+		
+		Cliente cliente = new Cliente();
+		cliente.setEmail(email);
+		
+		clientes.add(cliente);
+		
 		resp.setCharacterEncoding("UTF-8");
 		resp.getWriter().print("Chamou pelo método post enviando e-mail: " + email);
 	}
