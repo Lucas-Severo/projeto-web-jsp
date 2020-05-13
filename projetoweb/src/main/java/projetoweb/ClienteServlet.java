@@ -41,8 +41,9 @@ public class ClienteServlet extends HttpServlet {
 
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		String email = req.getParameter("email");
 		resp.setCharacterEncoding("UTF-8");
-		resp.getWriter().print("Chamou pelo método post");
+		resp.getWriter().print("Chamou pelo método post enviando e-mail: " + email);
 	}
 	
 	@Override
