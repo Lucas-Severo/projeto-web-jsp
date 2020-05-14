@@ -57,8 +57,15 @@ public class ClienteServlet extends HttpServlet {
 		
 		clientes.add(cliente);
 		
-		resp.setCharacterEncoding("UTF-8");
-		resp.getWriter().print("Chamou pelo método post enviando e-mail: " + email);
+		var dispatcher = req.getRequestDispatcher("/cliente.jsp");
+		req.setAttribute("msg", "Cadastrado com sucesso!");
+		req.setAttribute("clientes", clientes);
+		dispatcher.forward(req, resp);
+		
+		// resp.sendRedirect("cliente");
+		
+		//resp.setCharacterEncoding("UTF-8");
+		//resp.getWriter().print("Chamou pelo método post enviando e-mail: " + email);
 	}
 	
 	@Override

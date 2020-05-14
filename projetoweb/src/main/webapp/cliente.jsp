@@ -7,6 +7,15 @@
 	<title>Cadastrar cliente</title>
 </head>
 	<body>
+		<div>
+			<% 
+			String msg = (String) request.getAttribute("msg");
+			if(msg != null) {
+				out.println("<p>" + request.getAttribute("msg") + "</p>");
+			}
+			%>
+		</div>
+	
 		<form action="cliente" method="POST">
 			<label for="email">E-mail:</label>
 			<input type="email" id="email" value="" name="email" />
@@ -14,9 +23,11 @@
 		</form>
 		
 		<%
-			List<Cliente> lista = (List<Cliente>) request.getAttribute("clientes");
-			for(Cliente cliente: lista) {
-				out.print("<p>" + cliente.getEmail() + "</p>");
+			@SuppressWarnings("unchecked")
+			List<Cliente> clientes = (List<Cliente>) request.getAttribute("clientes");
+			
+			for(Cliente cliente : clientes) {
+				out.println("<p>" + cliente.getEmail() + "</p>");
 			}
 		%>
 	</body>
