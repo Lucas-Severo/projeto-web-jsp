@@ -28,9 +28,16 @@
 			
 			for(Cliente cliente : clientes) {
 				out.println("<div>");
-				out.println(cliente.getEmail() + "   <a href='cliente?cliente=" + cliente.getEmail() + "'>Excluir</a>");
+				out.println(cliente.getEmail() + "   <a href='javascript:confirma(\"" + cliente.getEmail() + "\")'>Excluir</a>");
 				out.println("</div>");
 			}
 		%>
+		<script>
+			function confirma(email) {
+				if(window.confirm("Tem certeza que deseja excluir?")) {
+					window.location.href="cliente?cliente=" + email;
+				}
+			}
+		</script>
 	</body>
 </html>
