@@ -18,7 +18,7 @@
 	
 		<form action="cliente" method="POST">
 			<label for="email">E-mail:</label>
-			<input type="email" id="email" value="" name="email" />
+			<input required type="email" id="email" value="" name="email" />
 			<input type="submit" value="Salvar"/>
 		</form>
 		
@@ -27,7 +27,9 @@
 			List<Cliente> clientes = (List<Cliente>) request.getAttribute("clientes");
 			
 			for(Cliente cliente : clientes) {
-				out.println("<p>" + cliente.getEmail() + "</p>");
+				out.println("<div>");
+				out.println(cliente.getEmail() + "   <a href='cliente?cliente=" + cliente.getEmail() + "'>Excluir</a>");
+				out.println("</div>");
 			}
 		%>
 	</body>

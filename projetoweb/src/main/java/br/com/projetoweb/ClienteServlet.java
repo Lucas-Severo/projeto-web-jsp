@@ -1,8 +1,6 @@
 package br.com.projetoweb;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -11,6 +9,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import br.com.projetoweb.model.Cliente;
+import br.com.projetoweb.service.ClienteService;
 
 @WebServlet(urlPatterns = { "/cliente", "/clienteServlet", "/clienteController" })
 public class ClienteServlet extends HttpServlet {
@@ -20,10 +19,10 @@ public class ClienteServlet extends HttpServlet {
 	 */
 	private static final long serialVersionUID = 7371218363017857325L;
 	
-	List<Cliente> clientes;
+	private ClienteService clienteService;
 	
 	public ClienteServlet() {
-		clientes = new ArrayList<Cliente>();
+		clienteService = new ClienteService();
 		System.out.println("Construindo o servlet...");
 	}
 	
@@ -41,11 +40,17 @@ public class ClienteServlet extends HttpServlet {
 	
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		String cliente = req.getParameter("cliente");
+		if(cliente != null) {
+			clienteService.excluirCliente(cliente);
+		}
+		
 		var dispatcher = req.getRequestDispatcher("/cliente.jsp");
 		
-		req.setAttribute("clientes", clientes);
+		req.setAttribute("clientes", clienteService.getClientes());
 		
 		dispatcher.forward(req, resp);
+
 	}
 
 	@Override
@@ -54,12 +59,12 @@ public class ClienteServlet extends HttpServlet {
 		
 		Cliente cliente = new Cliente();
 		cliente.setEmail(email);
-		
-		clientes.add(cliente);
+			
+		clienteService.cadastrar(cliente);
 		
 		var dispatcher = req.getRequestDispatcher("/cliente.jsp");
 		req.setAttribute("msg", "Cadastrado com sucesso!");
-		req.setAttribute("clientes", clientes);
+		req.setAttribute("clientes", clienteService.getClientes());
 		dispatcher.forward(req, resp);
 		
 		// resp.sendRedirect("cliente");
