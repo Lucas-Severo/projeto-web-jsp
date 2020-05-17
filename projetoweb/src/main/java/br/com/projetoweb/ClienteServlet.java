@@ -40,14 +40,34 @@ public class ClienteServlet extends HttpServlet {
 	
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		String cliente = req.getParameter("cliente");
-		if(cliente != null) {
-			clienteService.excluirCliente(cliente);
+		String id = req.getParameter("id");
+		String action = req.getParameter("action");
+		
+		Cliente cliente = new Cliente(0L);
+		cliente.setEmail("");
+		
+		// definir se o cliente vai ser deletado ou editado
+		if(id != null && id != "" && action != null && action != "") {
+			
+			if(action.equals("delete")) {
+				clienteService.excluirCliente(Long.parseLong(id));
+			}
+			
+			if(action.equals("edit")) {
+				try {
+					cliente = ClienteService.getById(Long.parseLong(id));
+				} catch (Exception exception) {
+					System.err.println(exception.getMessage());
+				}
+			}
+
 		}
 		
 		var dispatcher = req.getRequestDispatcher("/cliente.jsp");
 		
 		req.setAttribute("clientes", clienteService.getClientes());
+		req.setAttribute("cliente", cliente);
+		req.setAttribute("id", cliente.getId());
 		
 		dispatcher.forward(req, resp);
 
@@ -55,16 +75,30 @@ public class ClienteServlet extends HttpServlet {
 
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		String id = req.getParameter("id");
 		String email = req.getParameter("email");
 		
-		Cliente cliente = new Cliente();
+		Cliente cliente;
+		if(id != null && !id.equals("null") && !id.equals("0")) {
+			cliente = new Cliente(Long.parseLong(id));
+		} else {
+			cliente = new Cliente();
+		}
 		cliente.setEmail(email);
-			
-		clienteService.cadastrar(cliente);
+		
+		try {
+			clienteService.salvar(cliente);
+		} catch (Exception err) {
+			System.err.println(err.getMessage());
+		}
+		
+		Cliente cliente1 = new Cliente(0L);
+		cliente1.setEmail("");
 		
 		var dispatcher = req.getRequestDispatcher("/cliente.jsp");
 		req.setAttribute("msg", "Cadastrado com sucesso!");
 		req.setAttribute("clientes", clienteService.getClientes());
+		req.setAttribute("cliente", cliente1);
 		dispatcher.forward(req, resp);
 		
 		// resp.sendRedirect("cliente");
